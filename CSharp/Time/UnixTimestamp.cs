@@ -1,12 +1,12 @@
 // Copyright (c) 2022 Fabio Iotti
 // The copyright holders license this file to you under the MIT license,
-// available at https://github.com/bruce965/quick-trade/raw/master/LICENSE
+// available at https://github.com/bruce965/util/raw/master/LICENSE
 
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
 
-namespace QuickTrade.Core.Abstractions;
+namespace Utility;
 
 /// <summary>
 /// Thin wrapper around a <see cref="long"/> counting the number of

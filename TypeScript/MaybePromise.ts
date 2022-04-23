@@ -1,6 +1,6 @@
 // Copyright (c) 2021 Fabio Iotti
 // The copyright holders license this file to you under the MIT license,
-// available at https://github.com/bruce965/snippets/raw/master/LICENSE
+// available at https://github.com/bruce965/util/raw/master/LICENSE
 
 /**
  * Either an asynchronous Promise or directly a value.

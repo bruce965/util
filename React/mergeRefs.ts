@@ -1,6 +1,6 @@
 // Copyright (c) 2021 Fabio Iotti
 // The copyright holders license this file to you under the MIT license,
-// available at https://github.com/bruce965/snippets/raw/master/LICENSE
+// available at https://github.com/bruce965/util/raw/master/LICENSE
 
 import { MutableRefObject, RefCallback } from 'react';
 import { WeakTree } from '../TypeScript/WeakTree';
