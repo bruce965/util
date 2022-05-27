@@ -12,33 +12,22 @@ namespace Utility;
 /// that object to be reclaimed by garbage collection.
 /// </summary>
 /// <typeparam name="T">The type of the object referenced.</typeparam>
-[DebuggerDisplay("{ValueForDebugDisplay}")]
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}()}}")]
 public class WeakLazy<T> where T : class
 {
-    readonly Func<T> build;
-    readonly WeakReference<T?> weak;
+    readonly Func<T> _build;
+    readonly WeakReference<T?> _weak;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public T Value
     {
         get
         {
-            if (!weak.TryGetTarget(out var value))
+            if (!_weak.TryGetTarget(out var value))
             {
-                value = build();
-                weak.SetTarget(value);
+                value = _build();
+                _weak.SetTarget(value);
             }
-
-            return value;
-        }
-    }
-
-    internal T? ValueForDebugDisplay
-    {
-        get
-        {
-            if (!weak.TryGetTarget(out var value))
-                value = null;
 
             return value;
         }
@@ -46,16 +35,27 @@ public class WeakLazy<T> where T : class
 
     public WeakLazy(Func<T> valueFactory)
     {
-        build = valueFactory;
-        weak = new WeakReference<T?>(null);
+        _build = valueFactory;
+        _weak = new WeakReference<T?>(null);
     }
 
-    public static implicit operator T(WeakLazy<T> obj)
-        => obj.Value;
+    T? GetDebuggerDisplay()
+    {
+        if (!_weak.TryGetTarget(out var value))
+            value = null;
+
+        return value;
+    }
+
+    public static implicit operator T(WeakLazy<T> lazy)
+        => lazy.Value;
+
+    public static implicit operator WeakLazy<T>(T value)
+        => new(() => value);
 }
 
 public static class WeakLazy
 {
     public static WeakLazy<T> FromDefaultConstructor<T>() where T : class, new()
-        => new WeakLazy<T>(() => new T());
+        => new(() => new T());
 }
