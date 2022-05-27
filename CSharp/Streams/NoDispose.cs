@@ -112,7 +112,7 @@ public static class StreamExtensions
 		public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default(CancellationToken))
 			=> _wrapped.WriteAsync(buffer, cancellationToken);
 
-		public virtual void WriteByte(byte value)
+		public override void WriteByte(byte value)
 			=> _wrapped.WriteByte(value);
 	}
 
