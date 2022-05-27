@@ -2,6 +2,7 @@
 // The copyright holders license this file to you under the MIT license,
 // available at https://github.com/bruce965/util/raw/master/LICENSE
 
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
@@ -16,7 +17,7 @@ namespace Utility;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public struct UnixTimestamp : IEquatable<UnixTimestamp>, IComparable<UnixTimestamp>, IConvertible, ISpanFormattable, ISerializable
 {
-	long _epochSeconds;
+	readonly long _epochSeconds;
 
 	public UnixTimestamp(long epochSeconds)
 	{
@@ -155,19 +156,38 @@ public struct UnixTimestamp : IEquatable<UnixTimestamp>, IComparable<UnixTimesta
 		=> DateTime.UnixEpoch + TimeSpan.FromTicks(timestamp._epochSeconds * TimeSpan.TicksPerSecond);
 
 	public static implicit operator UnixTimestamp(DateTime date)
-		=> new UnixTimestamp((DateTime.UnixEpoch - date).Ticks / TimeSpan.TicksPerSecond);
+		=> new((DateTime.UnixEpoch - date).Ticks / TimeSpan.TicksPerSecond);
 
 	public static implicit operator long(UnixTimestamp timestamp)
 		=> timestamp._epochSeconds;
 
 	public static implicit operator UnixTimestamp(long epochSeconds)
-		=> new UnixTimestamp(epochSeconds);
+		=> new(epochSeconds);
 
 	public static explicit operator int(UnixTimestamp timestamp)
 		=> (int)timestamp._epochSeconds;
 
 	public static implicit operator UnixTimestamp(int epochSeconds)
-		=> new UnixTimestamp(epochSeconds);
+		=> new(epochSeconds);
+
+	#endregion
+
+	#region Operators
+
+	public static TimeSpan operator -(UnixTimestamp left, UnixTimestamp right)
+		=> TimeSpan.FromTicks((left._epochSeconds - right._epochSeconds) * TimeSpan.TicksPerSecond);
+
+	public static UnixTimestamp operator +(UnixTimestamp timestamp, TimeSpan time)
+		=> timestamp + (time.Ticks / TimeSpan.TicksPerSecond);
+
+	public static UnixTimestamp operator +(UnixTimestamp timestamp, long seconds)
+		=> timestamp._epochSeconds + seconds;
+
+	public static UnixTimestamp operator -(UnixTimestamp timestamp, TimeSpan time)
+		=> timestamp + (-time);
+
+	public static UnixTimestamp operator -(UnixTimestamp timestamp, long seconds)
+		=> timestamp + (-seconds);
 
 	#endregion
 }
