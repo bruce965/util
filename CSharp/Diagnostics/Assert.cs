@@ -11,7 +11,7 @@ namespace Utility;
 
 public static class Assert
 {
-    static readonly Regex MayBeCompositeExpression = new Regex(@"[-+*/&|^~%?:<>=!]", RegexOptions.Compiled);
+    static readonly Regex MayBeCompositeExpression = new(@"[-+*/&|^~%?:<>=!]", RegexOptions.Compiled);
 
     /// <summary>
     /// Throws an <see cref="ArgumentNullException"/> if <paramref name="argument"/> is <c>null</c>.
@@ -36,6 +36,7 @@ public static class Assert
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="_paramName">The name of the parameter with which <paramref name="argument"/> corresponds (generated automatically from the compiler).</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="condition"/> is <c>false</c>.</exception>
+    [SuppressMessage("Style", "IDE0060")]
     public static void ArgumentInRange(object? argument, [DoesNotReturnIf(false)] bool condition, string? message = null, [CallerArgumentExpression("argument")] string _paramName = null!)
     {
         if (condition)
@@ -52,6 +53,7 @@ public static class Assert
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="_paramName">The name of the parameter with which <paramref name="argument"/> corresponds (generated automatically from the compiler).</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="condition"/> is <c>false</c>.</exception>
+    [SuppressMessage("Style", "IDE0060")]
     public static void Argument(object? param, [DoesNotReturnIf(false)] bool condition, string? message = null, [CallerArgumentExpression("param")] string _paramName = null!)
     {
         if (condition)
@@ -73,6 +75,21 @@ public static class Assert
             return;
 
         Fail(message, _expression);
+    }
+
+    /// <summary>
+    /// Throws an <see cref="AssertionFailedException"/> if <paramref name="obj"/> is not <c>null</c>.
+    /// </summary>
+    /// <param name="obj">Null object.</param>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    /// <param name="_expression">The null expression (generated automatically from the compiler).</param>
+    /// <exception cref="AssertionFailedException">Thrown if <paramref name="obj"/> is not <c>null</c>.</exception>
+    public static void Null(object? obj, string? message = null, [CallerArgumentExpression("obj")] string _expression = null!)
+    {
+        if (obj is null)
+            return;
+
+        Fail(message, Wrap("{0} is null", _expression));
     }
 
     /// <summary>
