@@ -24,10 +24,10 @@ public struct Bitmap
         if (index < 0 || index >= bitmap.Length * 8)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        var byteIndex = index >> 3;
-        var bitIndex = index & 0b111;
+        var byteIndex = index >> 3;  // divide by 8 and discard remainder
+        var bitIndex = index & 0b111;  // modulo 8
 
-        return ((bitmap[byteIndex] << bitIndex) & 1) != 0;
+        return ((bitmap[byteIndex] >> bitIndex) & 1) != 0;
     }
 
     public static void Set(Span<byte> bitmap, int index, bool value)
@@ -35,8 +35,8 @@ public struct Bitmap
         if (index < 0 || index >= bitmap.Length * 8)
             throw new ArgumentOutOfRangeException(nameof(index));
 
-        var byteIndex = index >> 3;
-        var bitIndex = index & 0b111;
+        var byteIndex = index >> 3;  // divide by 8 and discard remainder
+        var bitIndex = index & 0b111;  // modulo 8
         var bit = value ? 1 : 0;
 
         bitmap[byteIndex] = (byte)((bitmap[byteIndex] & ~(1 << bitIndex)) | (bit << bitIndex));
