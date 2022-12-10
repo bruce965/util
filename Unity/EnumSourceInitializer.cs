@@ -42,7 +42,7 @@ namespace Utility
 
                 foreach (var (value, humanName) in factory())
                 {
-                    var csharpName = StringUtility.ToCSharpName(humanName);
+                    var csharpName = StringCasing.ToCSharpName(humanName);
 
                     sb.Append(indent);
 
